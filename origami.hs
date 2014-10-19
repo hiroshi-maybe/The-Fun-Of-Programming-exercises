@@ -70,3 +70,9 @@ foldLargs f e = (\x -> case x of
 unfoldLargs :: (b -> Bool) -> (b -> a) -> (b -> b) -> (b -> Maybe (a, b))
 unfoldLargs p f g = (\x -> if p x then Nothing else Just (f x, g x))
 
+-- Exercise 3.10
+
+deleteL :: Eq a => a -> [a] -> [a]
+deleteL y = paraL (\x (xs, ys) ->
+        if x==y then xs else x:ys) []
+
