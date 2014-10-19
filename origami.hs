@@ -1,3 +1,5 @@
+import Data.Maybe
+
 -- Fun of programming
 -- Chapter 3 Origami programming
 
@@ -30,3 +32,16 @@ insert1' y xs = paraL (\x (l, d) ->
          ) [y] xs
 
 -- Exercise 3.6
+
+unfoldL' :: (b -> Maybe (a,b)) -> b -> [a]
+--unfoldL' f u = case f u of
+--  Nothing -> []
+--  Just (x,v) -> x:(unfoldL' f v)
+unfoldL' f u = unfoldL (isNothing.f) (\b -> case f b of 
+         Just (x,_) -> x) (\b -> case f b of 
+         Just (_,v) -> v) u
+
+unfoldL :: (b->Bool) -> (b->a) -> (b->b) -> b -> [a]
+unfoldL p f g b = if p b then [] else (f b):(unfoldL p f g (g b))
+--unfoldL p f g = unfoldL' (\x -> if p x then Nothing else Just(f x,g x))
+
