@@ -59,3 +59,14 @@ foldL' f = foldL (\x acc -> f $ Just (x, acc)) (f Nothing)
 sum' = foldL' (\x -> case x of
     Nothing       -> 0
     Just (a, acc) -> a + acc)
+
+-- Exercise 3.9
+
+foldLargs :: (a -> b -> b) -> b -> (Maybe (a, b) -> b)
+foldLargs f e = (\x -> case x of
+          Nothing       -> e
+          Just (x, acc) -> f x acc)
+
+unfoldLargs :: (b -> Bool) -> (b -> a) -> (b -> b) -> (b -> Maybe (a, b))
+unfoldLargs p f g = (\x -> if p x then Nothing else Just (f x, g x))
+
