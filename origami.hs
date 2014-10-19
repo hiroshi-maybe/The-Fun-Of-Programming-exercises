@@ -76,3 +76,15 @@ deleteL :: Eq a => a -> [a] -> [a]
 deleteL y = paraL (\x (xs, ys) ->
         if x==y then xs else x:ys) []
 
+-- Exercise 3.11
+
+minimumL :: Ord a => [a] -> a
+minimumL (x:xs) = foldL min x xs
+
+delmin :: Ord a => [a] -> Maybe (a, [a])
+delmin xs = paraL (\x (ac, m) -> case m of
+       Nothing        -> if x==y then Just (y, ac) else Nothing
+       Just (y', ac') -> Just (y', x:ac')
+       ) Nothing xs
+       where y = minimumL xs
+
