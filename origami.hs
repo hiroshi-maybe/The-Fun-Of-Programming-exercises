@@ -45,3 +45,17 @@ unfoldL :: (b->Bool) -> (b->a) -> (b->b) -> b -> [a]
 unfoldL p f g b = if p b then [] else (f b):(unfoldL p f g (g b))
 --unfoldL p f g = unfoldL' (\x -> if p x then Nothing else Just(f x,g x))
 
+-- Exercise 3.8
+
+foldL' :: (Maybe (a, b) -> b) -> [a] -> b 
+--foldL' f [] = f Nothing 
+--foldL' f (x:xs) = f (Just (x, foldL' f xs))
+foldL' f = foldL (\x acc -> f $ Just (x, acc)) (f Nothing)
+
+--foldL f e = foldL' (\x -> case x of
+--      Nothing       -> e
+--      Just (a, acc) -> f a acc)
+
+sum' = foldL' (\x -> case x of
+    Nothing       -> 0
+    Just (a, acc) -> a + acc)
