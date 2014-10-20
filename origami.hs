@@ -94,9 +94,24 @@ insert :: Ord a => a -> [a] -> [a]
 --    insert y Nil = wrap y
 --    insert y (Cons x xs) | y < x = Cons y (Cons x xs)
 --                         | otherwise = Cons x (insert y xs)
-insert x xs = unfoldL' insert' (Just x, xs)
-       where
-        insert' :: Ord a => (Maybe a, [a]) -> Maybe (a, (Maybe a, [a]))
-        insert' (_, []) = Nothing
-        insert' (Nothing, y:ys) = Just (y, (Nothing, ys))
-        insert' (Just n, xs@(y:ys)) = if y > n then Just (n, (Nothing, xs)) else Just (y, (Just n, ys))
+
+--insert x xs = unfoldL' insert' (Just x, xs)
+--       where
+--        insert' :: Ord a => (Maybe a, [a]) -> Maybe (a, (Maybe a, [a]))
+--        insert' (_, [])             = Nothing
+--        insert' (Nothing, y:ys)     = Just (y, (Nothing, ys))
+--        insert' (Just n, xs@(y:ys)) = if y > n then Just (n, (Nothing, xs)) else Just (y, (Just n, ys))
+
+-- Exercise 3.14
+
+apoL' :: (b -> Maybe (a, Either b [a])) -> b -> [a]
+apoL' f u = case f u of
+      Nothing            -> []
+      Just (x, Left v)   -> x:(apoL' f v)
+      Just (x, Right xs) -> x:xs
+
+insert x xs = apoL' insert' (Just x, xs)
+       where insert' :: Ord a => (Maybe a, [a]) -> Maybe (a, Either (Maybe a, [a]) [a])
+             insert' (_, []) = Nothing
+             insert' (Nothing, y:ys) = Just (y, Right ys)
+             insert' (Just n, xs@(y:ys)) = if y > n then Just (n, Left (Nothing, xs)) else Just (y, Left (Just n, ys))
