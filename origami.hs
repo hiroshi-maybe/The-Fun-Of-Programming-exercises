@@ -88,3 +88,15 @@ delmin xs = paraL (\x (ac, m) -> case m of
        ) Nothing xs
        where y = minimumL xs
 
+-- Exercise 3.13
+
+insert :: Ord a => a -> [a] -> [a]
+--    insert y Nil = wrap y
+--    insert y (Cons x xs) | y < x = Cons y (Cons x xs)
+--                         | otherwise = Cons x (insert y xs)
+insert x xs = unfoldL' insert' (Just x, xs)
+       where
+        insert' :: Ord a => (Maybe a, [a]) -> Maybe (a, (Maybe a, [a]))
+        insert' (_, []) = Nothing
+        insert' (Nothing, y:ys) = Just (y, (Nothing, ys))
+        insert' (Just n, xs@(y:ys)) = if y > n then Just (n, (Nothing, xs)) else Just (y, (Just n, ys))
