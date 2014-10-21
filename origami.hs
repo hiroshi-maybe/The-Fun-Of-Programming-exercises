@@ -115,3 +115,28 @@ insert x xs = apoL' insert' (Just x, xs)
              insert' (_, []) = Nothing
              insert' (Nothing, y:ys) = Just (y, Right ys)
              insert' (Just n, xs@(y:ys)) = if y > n then Just (n, Left (Nothing, xs)) else Just (y, Left (Just n, ys))
+
+-- Exercise 3.16
+
+data Nat = Zero | Succ Nat deriving (Show)
+
+foldN :: a -> (a -> a) -> Nat -> a
+foldN z s Zero = z
+foldN z s (Succ n) = s (foldN z s n)
+
+iter :: Nat -> (a -> a) -> (a -> a)
+iter n f x = foldN x f n
+
+-- helper
+genN :: Int -> Nat
+genN 0 = Zero
+genN n = Succ $ genN (n-1)
+
+addN :: Nat -> Nat -> Nat
+addN Zero n = n
+addN n Zero = n
+addN (Succ n) m = addN n (Succ m)
+
+--mulN :: Nat -> Nat -> Nat
+--mulN Zero _ = Zero
+--mulN _ Zero = Zero
