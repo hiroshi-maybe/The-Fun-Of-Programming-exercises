@@ -128,6 +128,7 @@ iter :: Nat -> (a -> a) -> (a -> a)
 iter n f x = foldN x f n
 
 -- helper
+
 genN :: Int -> Nat
 genN 0 = Zero
 genN n = Succ $ genN (n-1)
@@ -141,3 +142,8 @@ mulN = (foldN Zero).addN
 powN :: Nat -> Nat -> Nat
 powN = (foldN $ Succ Zero).mulN
 
+-- Exercise 3.19
+
+predN :: Nat -> Maybe Nat
+predN Zero = Nothing
+predN (Succ n) = foldN (Just n) id (Succ Zero)
