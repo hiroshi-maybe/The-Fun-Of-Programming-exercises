@@ -147,3 +147,23 @@ powN = (foldN $ Succ Zero).mulN
 predN :: Nat -> Maybe Nat
 predN Zero = Nothing
 predN (Succ n) = foldN (Just n) id (Succ Zero)
+
+-- Exercise 3.20
+
+subN :: Nat -> Nat -> Maybe Nat
+subN m = foldN (Just m) predN'
+     where predN' :: Maybe Nat -> Maybe Nat
+           predN' Nothing  = Nothing
+           predN' (Just x) = predN x
+
+eqN :: Nat -> Nat -> Bool
+eqN m n = case subN m n of
+    Just Zero -> True
+    _         -> False
+
+lessN :: Nat -> Nat -> Bool
+lessN m n = case subN m n of
+      Nothing -> True
+      _       -> False
+
+
