@@ -166,4 +166,21 @@ lessN m n = case subN m n of
       Nothing -> True
       _       -> False
 
+-- Exercise 3.21
+
+unfoldN' :: (a -> Maybe a) -> a -> Nat
+--unfoldN' f x = case f x of
+--         Nothing -> Zero
+--         Just y  -> Succ (unfoldN' f y)
+unfoldN' f x = unfoldN (isNothing.f) gen x
+         where gen y = case f y of
+                   Just z -> z
+
+unfoldN :: (a -> Bool) -> (a -> a) -> a -> Nat
+unfoldN p f x = if p x then Zero else Succ (unfoldN p f (f x))
+--unfoldN p f x = unfoldN' gen x
+--        where gen y = if p y then Nothing else Just (f y)
+
+
+
 
