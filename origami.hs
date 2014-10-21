@@ -133,10 +133,11 @@ genN 0 = Zero
 genN n = Succ $ genN (n-1)
 
 addN :: Nat -> Nat -> Nat
-addN Zero n = n
-addN n Zero = n
-addN (Succ n) m = addN n (Succ m)
+addN n = foldN n Succ
 
---mulN :: Nat -> Nat -> Nat
---mulN Zero _ = Zero
---mulN _ Zero = Zero
+mulN :: Nat -> Nat -> Nat
+mulN = (foldN Zero).addN
+
+powN :: Nat -> Nat -> Nat
+powN = (foldN $ Succ Zero).mulN
+
