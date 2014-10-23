@@ -120,18 +120,30 @@ insert x xs = apoL' insert' (Just x, xs)
 
 data Nat = Zero | Succ Nat deriving (Show)
 
+-- helper
+genN :: Int -> Nat
+genN 0 = Zero
+genN n = Succ $ genN (n-1)
+
 foldN :: a -> (a -> a) -> Nat -> a
 foldN z s Zero = z
 foldN z s (Succ n) = s (foldN z s n)
 
+-- foldN 2 (+1) (genN 3)
+
 iter :: Nat -> (a -> a) -> (a -> a)
 iter n f x = foldN x f n
 
--- helper
+foldN' :: (Maybe (Nat, b) -> b) -> Nat -> b
+foldN' f Zero = f Nothing
+foldN' f (Succ n) = f (Just (n, foldN' f n))
 
-genN :: Int -> Nat
-genN 0 = Zero
-genN n = Succ $ genN (n-1)
+-- ex
+addN' m n = foldN' inc m
+     where inc Nothing = n
+           inc (Just (_, x)) = Succ x
+
+-- Exercise 3.18
 
 addN :: Nat -> Nat -> Nat
 addN n = foldN n Succ
