@@ -134,14 +134,14 @@ foldN z s (Succ n) = s (foldN z s n)
 iter :: Nat -> (a -> a) -> (a -> a)
 iter n f x = foldN x f n
 
-foldN' :: (Maybe (Nat, b) -> b) -> Nat -> b
+foldN' :: (Maybe b -> b) -> Nat -> b
 foldN' f Zero = f Nothing
-foldN' f (Succ n) = f (Just (n, foldN' f n))
+foldN' f (Succ n) = f (Just $ foldN' f n)
 
 -- ex
 addN' m n = foldN' inc m
      where inc Nothing = n
-           inc (Just (_, x)) = Succ x
+           inc (Just x) = Succ x
 
 -- Exercise 3.18
 
@@ -193,6 +193,12 @@ unfoldN p f x = if p x then Zero else Succ (unfoldN p f (f x))
 --unfoldN p f x = unfoldN' gen x
 --        where gen y = if p y then Nothing else Just (f y)
 
+-- Exercise 3.25
 
+hyloN' :: (Maybe b -> b) -> (a -> Maybe a) -> a -> b
+hyloN' f g = (foldN' f).(unfoldN' g)
+
+hyloN'' :: (Maybe b -> b) -> (a -> Maybe a) -> a -> b
+hyloN'' f g x = if isNothing (g x) then f Nothing else f (Just $ hyloN'' f g x)
 
 
